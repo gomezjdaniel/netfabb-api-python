@@ -145,7 +145,14 @@ class Netfabb(object):
     return output
 
   def file_download(self, file_id, file_name):
-    response = requests.get(self._base_url, stream=True)
+    pass
+
+    '''
+    parameters = {
+      'fileuuid': file_id
+    }
+
+    response = requests.get(self._base_url, params=parameters, stream=True)
     if response.status_code != 200:
       raise NetfabbCantConnectToAPI(response)
 
@@ -156,3 +163,4 @@ class Netfabb(object):
           f.flush()
 
     return True
+    '''
