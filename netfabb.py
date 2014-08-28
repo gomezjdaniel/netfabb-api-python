@@ -25,13 +25,20 @@ class Netfabb(object):
 
     self._base_url = 'https://netfabb.azurewebsites.net/api/'
 
-  def _call_method(self, method_name, parameters=None):
-    if parameters == None:
-      parameters = {}
+  def _get_base_parameters(self):
+    parameters = {}
 
     parameters['login'] = self._login
     parameters['password'] = self._password
     parameters['protocol'] = 100
+
+    return parameters
+
+  def _call_method(self, method_name, parameters=None):
+    if parameters == None:
+      parameters = {}
+
+    parameters.update(self._get_base_parameters())
     parameters['methodname'] = method_name
 
     if 'filename' in parameters:
@@ -145,14 +152,11 @@ class Netfabb(object):
     return output
 
   def file_download(self, file_id, file_name):
-    pass
+    parameters = self._get_base_parameters()
+    parameters['methodname'] = 'downloadfile'
+    parameters['fileuuid'] = file_id
 
-    '''
-    parameters = {
-      'fileuuid': file_id
-    }
-
-    response = requests.get(self._base_url, params=parameters, stream=True)
+    response = requests.get(self._base_url, params=parameters, verify=True, stream=True)
     if response.status_code != 200:
       raise NetfabbCantConnectToAPI(response)
 
@@ -163,4 +167,4 @@ class Netfabb(object):
           f.flush()
 
     return True
-    '''
+    
